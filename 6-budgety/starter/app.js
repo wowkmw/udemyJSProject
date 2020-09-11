@@ -40,7 +40,8 @@ let budgetController = (function(){
             exp: 0,
             inc: 0
         },
-        budget: 0
+        budget: 0,
+        percent: -1//so that the initial value is not valid, so no percent info
     };
 
     return {
@@ -74,6 +75,7 @@ let budgetController = (function(){
             //calc the budget: inc - exp
             database.budget = database.totals.inc - database.totals.exp;
             //calc the persentage of spent inc
+            database.percent = Math.round((database.total.exp / database.totals.inc) * 100);
         },
 
         test: function(){
