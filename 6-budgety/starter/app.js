@@ -75,7 +75,18 @@ let budgetController = (function(){
             //calc the budget: inc - exp
             database.budget = database.totals.inc - database.totals.exp;
             //calc the persentage of spent inc
-            database.percent = Math.round((database.total.exp / database.totals.inc) * 100);
+            if(database.totals.inc > 0){
+                database.percent = Math.round(database.totals.exp / database.totals.inc * 100);
+            }
+        },
+
+        getBudget: function(){
+            return{
+                totalInc: database.totals.inc,
+                totalExp: database.totals.exp,
+                budget: database.budget,
+                percent: database.percent
+            };
         },
 
         test: function(){
@@ -158,10 +169,11 @@ let controller = (function(budgetCtrl, UICtrl){
 
     function updateBudget(){
         //calculate the new budget
-
+        budgetCtrl.calculateBudget();
         //return the new budget
-
+        let budget = budgetCtrl.getBudget();
         //update results on UI
+        console.log(budget);
     }
 
     function ctrlAddItem(){
