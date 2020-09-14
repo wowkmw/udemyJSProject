@@ -158,15 +158,17 @@ let UIController = (function(){
         },
 
         showBudget: function(obj){
-            document.querySelector(DOMStrings.incomeLabel).innerHTML = obj.totalInc;
-            document.querySelector(DOMStrings.expenseLabel).innerHTML = obj.totalExp;
+            document.querySelector(DOMStrings.incomeLabel).textContent = obj.totalInc;
+            document.querySelector(DOMStrings.expenseLabel).textContent = obj.totalExp;
             if(obj.budget > 0){
-                document.querySelector(DOMStrings.totalBudgetLabel).innerHTML = '+' + obj.budget;
+                document.querySelector(DOMStrings.totalBudgetLabel).textContent = '+' + obj.budget;
             }else{
-                document.querySelector(DOMStrings.totalBudgetLabel).innerHTML = obj.budget;
+                document.querySelector(DOMStrings.totalBudgetLabel).textContent = obj.budget;
             }
             if(obj.percent != -1){
-                document.querySelector(DOMStrings.persentageLabel).innerHTML = obj.percent + '%';
+                document.querySelector(DOMStrings.persentageLabel).textContent = obj.percent + '%';
+            }else{
+                document.querySelector(DOMStrings.persentageLabel).textContent = '--%';
             }
         }
     };
@@ -222,6 +224,12 @@ let controller = (function(budgetCtrl, UICtrl){
     return {
         init: function(){
             console.log("Started...");
+            UICtrl.showBudget({
+                totalInc: 0,
+                totalExp: 0,
+                budget: 0,
+                percent: '--'
+            });
             setuptEventListeners();
         }
     };
