@@ -6,7 +6,11 @@ let DOMStrings = {//global object to store queryselector strings
     inputValue: ".add__value",
     inputBtn: ".add__btn",
     incomeContainer: '.income__list',
-    expenseContainer: '.expenses__list'
+    expenseContainer: '.expenses__list',
+    incomeLabel: '.budget__income--value',
+    expenseLabel: '.budget__expenses--value',
+    totalBudgetLabel: '.budget__value',
+    persentageLabel: '.budget__expenses--percentage'
 };
 
 //budget controller to do the backend calculation
@@ -151,6 +155,19 @@ let UIController = (function(){
                                     //document.querySelector(DOMStrings.inputValue).value = "" 
             });
             fieldsArray[0].focus();//refocus to the first input field
+        },
+
+        showBudget: function(obj){
+            document.querySelector(DOMStrings.incomeLabel).innerHTML = obj.totalInc;
+            document.querySelector(DOMStrings.expenseLabel).innerHTML = obj.totalExp;
+            if(obj.budget > 0){
+                document.querySelector(DOMStrings.totalBudgetLabel).innerHTML = '+' + obj.budget;
+            }else{
+                document.querySelector(DOMStrings.totalBudgetLabel).innerHTML = obj.budget;
+            }
+            if(obj.percent != -1){
+                document.querySelector(DOMStrings.persentageLabel).innerHTML = obj.percent + '%';
+            }
         }
     };
 })();
@@ -173,7 +190,7 @@ let controller = (function(budgetCtrl, UICtrl){
         //return the new budget
         let budget = budgetCtrl.getBudget();
         //update results on UI
-        console.log(budget);
+        UICtrl.showBudget(budget);
     }
 
     function ctrlAddItem(){
@@ -193,6 +210,8 @@ let controller = (function(budgetCtrl, UICtrl){
             
             //caculate and add budget
             updateBudget();
+
+            
         } else {
             alert("Inappropriate input data!");
             UICtrl.clearFields();
