@@ -1,17 +1,6 @@
 //IIFE is useful for building APIs that hides away its inner components(data privacy, like private variables)
 //without creating a new function, which occupy resources
-let DOMStrings = {//global object to store queryselector strings  
-    inputType: ".add__type",
-    inputDescription: ".add__description",
-    inputValue: ".add__value",
-    inputBtn: ".add__btn",
-    incomeContainer: '.income__list',
-    expenseContainer: '.expenses__list',
-    incomeLabel: '.budget__income--value',
-    expenseLabel: '.budget__expenses--value',
-    totalBudgetLabel: '.budget__value',
-    persentageLabel: '.budget__expenses--percentage'
-};
+
 
 //budget controller to do the backend calculation
 let budgetController = (function(){
@@ -103,6 +92,18 @@ let budgetController = (function(){
 //UI controller to update the frontend UI
 let UIController = (function(){
     //code
+    let DOMStrings = {//global object to store queryselector strings  
+        inputType: ".add__type",
+        inputDescription: ".add__description",
+        inputValue: ".add__value",
+        inputBtn: ".add__btn",
+        incomeContainer: '.income__list',
+        expenseContainer: '.expenses__list',
+        incomeLabel: '.budget__income--value',
+        expenseLabel: '.budget__expenses--value',
+        totalBudgetLabel: '.budget__value',
+        persentageLabel: '.budget__expenses--percentage'
+    };
     return{
         getInput: function(){
             /*let type = document.querySelector(".add__type").value; //will be either inc or exp
@@ -170,15 +171,20 @@ let UIController = (function(){
             }else{
                 document.querySelector(DOMStrings.persentageLabel).textContent = '--%';
             }
+        },
+
+        getDOM: function(){
+            return DOMStrings;
         }
     };
 })();
 
 //global controller to receive user inputs and manage other functions
 let controller = (function(budgetCtrl, UICtrl){
+    
+    let DOMStrings = UICtrl.getDOM();
     function setuptEventListeners(){
         document.querySelector(DOMStrings.inputBtn).addEventListener('click', ctrlAddItem);
-
         document.addEventListener('keypress', function(event){
             if(event.keyCode === 13 || event.which === 13){
                 ctrlAddItem();
