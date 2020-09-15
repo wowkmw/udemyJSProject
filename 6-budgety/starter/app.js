@@ -102,7 +102,8 @@ let UIController = (function(){
         incomeLabel: '.budget__income--value',
         expenseLabel: '.budget__expenses--value',
         totalBudgetLabel: '.budget__value',
-        persentageLabel: '.budget__expenses--percentage'
+        persentageLabel: '.budget__expenses--percentage',
+        listParent: '.container'//class name is separated by space
     };
     return{
         getInput: function(){
@@ -182,14 +183,17 @@ let UIController = (function(){
 //global controller to receive user inputs and manage other functions
 let controller = (function(budgetCtrl, UICtrl){
     
-    let DOMStrings = UICtrl.getDOM();
+    
     function setuptEventListeners(){
-        document.querySelector(DOMStrings.inputBtn).addEventListener('click', ctrlAddItem);
-        document.addEventListener('keypress', function(event){
+        let DOMStrings = UICtrl.getDOM();
+        document.querySelector(DOMStrings.inputBtn).addEventListener('click', ctrlAddItem);//add item when the user click the add button
+        document.addEventListener('keypress', function(event){//add item when the user press enter
             if(event.keyCode === 13 || event.which === 13){
                 ctrlAddItem();
             }
         });
+
+        document.querySelector(DOMStrings.listParent).addEventListener('click', ctrlDeleteItem);
     }
 
     function updateBudget(){
@@ -225,6 +229,10 @@ let controller = (function(budgetCtrl, UICtrl){
             UICtrl.clearFields();
         }
         
+    }
+
+    function ctrlDeleteItem(event){
+        console.log(event.target);
     }
 
     return {
