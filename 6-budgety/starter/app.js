@@ -249,14 +249,10 @@ let controller = (function(budgetCtrl, UICtrl){
         let itemID, splitID, type, ID;
         itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;//hard coded so it points to the right location
         //console.log(itemID);
-        if(itemID){
-            
+        if(itemID){           
             splitID = itemID.split('-');
-            console.log(splitID);
             type = splitID[0];
             ID = parseInt(splitID[1]);
-            console.log(ID);
-
             //1. delete item from database
             budgetCtrl.deleteItem(type, ID);
             //2. delete item from UI
