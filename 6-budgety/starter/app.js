@@ -49,7 +49,7 @@ let budgetController = (function(){
             }
             //ID = database.allItems[type][database.allItems[type].length - 1].id + 1;
 
-            //create new item based on type
+            //create new item based on type and assign id to the item
             if (type === 'exp'){
                 newItem = new Expense(ID, desc, val);
             } else if (type === 'inc'){
@@ -80,6 +80,20 @@ let budgetController = (function(){
                 budget: database.budget,
                 percent: database.percent
             };
+        },
+
+        deleteItem: function(type, id){
+            let ids, index;
+            
+            ids = database.allItems[type].map(function(current){
+                return current.id;//return an array of id
+            });//The map() method creates a new array with the results of calling a function for every array element.
+
+            index = ids.indexOf(id);//indexOf return the index of the id
+            if(index !== -1){
+                database.allItems[type].splice(index, 1);
+
+            }
         },
 
         test: function(){
@@ -129,12 +143,12 @@ let UIController = (function(){
             //create HTML strings with placeholder texts
             if (type === 'inc'){
                 containerType = DOMStrings.incomeContainer;
-                textHTML = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div>\
+                textHTML = '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div>\
             <div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button \
             class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
             } else {
                 containerType = DOMStrings.expenseContainer;
-                textHTML = '<div class="item clearfix" id="expense-%id%">\
+                textHTML = '<div class="item clearfix" id="exp-%id%">\
             <div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div>\
             <div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline">\
             </i></button></div></div></div>';
@@ -232,7 +246,23 @@ let controller = (function(budgetCtrl, UICtrl){
     }
 
     function ctrlDeleteItem(event){
-        console.log(event.target);
+        let itemID, splitID, type, ID;
+        itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;//hard coded so it points to the right location
+        //console.log(itemID);
+        if(itemID){
+            
+            splitID = itemID.split('-');
+            console.log(splitID);
+            type = splitID[0];
+            ID = parseInt(splitID[1]);
+            console.log(ID);
+
+            //1. delete item from database
+            budgetCtrl.deleteItem(type, ID);
+            //2. delete item from UI
+
+            //3. update and show new budget
+        }
     }
 
     return {
