@@ -8,7 +8,21 @@ let budgetController = (function(){
         this.id = id;
         this.description = description;
         this.value = value;
+        this.percent = -1;
     }
+    //prototype is a performance friendly way to add new property to an existing
+    //constructor, but it does not have access to private variables in that class
+    Expense.prototype.calcPercent = function(totalIncome){
+        if(totalIncome > 0){
+            this.percent = Math.round((this.value / totalIncome) * 100);
+        } else{
+            this.percent = -1;
+        }     
+    };
+
+    Expense.prototype.getPercent = function(){
+        return this.percent;
+    };
 
     let Income = function(id, description, value){
         this.id = id;
@@ -71,6 +85,26 @@ let budgetController = (function(){
             if(database.totals.inc > 0){
                 database.percent = Math.round(database.totals.exp / database.totals.inc * 100);
             }
+        },
+
+        calculatePercent: function(){
+            database.allItems.exp.forEach(function(cur){//loop through all objects in the exp []
+                cur.calcPercent(database.totals.inc);
+            });
+            /*
+            //the following is a primitive version
+            let cur = database.allItems.exp;
+            for(let i = 0; i < cur.length; i++){
+                cur[i].calcPercent();
+            }
+            */
+        },
+        
+        getPercents: function(){
+            let allPercents = database.allItems.exp.map(function(cur){
+                return cur.getPercent();
+            });
+            return allPercents;
         },
 
         getBudget: function(){
@@ -224,6 +258,15 @@ let controller = (function(budgetCtrl, UICtrl){
         UICtrl.showBudget(budget);
     }
 
+    function updatePercent(){
+        //1. calc new percentage
+        budgetCtrl.calculatePercent();
+        //2. read percentages from the budget controller
+        let percentages = budgetCtrl.getPercents();
+        console.log(percentages);
+        //3. update the UI with new percentages
+    }
+
     function ctrlAddItem(){
         let input, newItem;
         //read input data
@@ -242,6 +285,9 @@ let controller = (function(budgetCtrl, UICtrl){
             //caculate and add budget
             updateBudget();
 
+            //caculate and update percentages
+            updatePercent();
+
             
         } else {
             alert("Inappropriate input data!");
@@ -258,12 +304,19 @@ let controller = (function(budgetCtrl, UICtrl){
             splitID = itemID.split('-');
             type = splitID[0];
             ID = parseInt(splitID[1]);
+
             //1. delete item from database
             budgetCtrl.deleteItem(type, ID);
+
             //2. delete item from UI
             UICtrl.delListItem(itemID);
+
             //3. update and show new budget
             updateBudget();//do not repeat yourself lamo
+
+            //4. caculate and update percentages
+            updatePercent();
+
         }
     }
 
