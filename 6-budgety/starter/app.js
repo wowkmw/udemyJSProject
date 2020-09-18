@@ -95,7 +95,7 @@ let budgetController = (function(){
             //the following is a primitive version
             let cur = database.allItems.exp;
             for(let i = 0; i < cur.length; i++){
-                cur[i].calcPercent();
+                cur[i].calcPercent(database.totals.inc);
             }
             */
         },
@@ -151,7 +151,8 @@ let UIController = (function(){
         expenseLabel: '.budget__expenses--value',
         totalBudgetLabel: '.budget__value',
         persentageLabel: '.budget__expenses--percentage',
-        listParent: '.container'//class name is separated by space
+        listParent: '.container',//class name is separated by space
+        expPercentLabel: '.item__percentage'
     };
     return{
         getInput: function(){
@@ -227,6 +228,24 @@ let UIController = (function(){
             }
         },
 
+        dusplayPercents: function(percents){
+            let fields = document.querySelectorAll(DOMStrings.expPercentLabel);
+
+            function nodeListForEach(list, callback){
+                for (let i = 0; i < list.length; i++){
+                    callback(list[i], i);
+                }
+            }
+
+            nodeListForEach(fields, function(cur, index){//the callback fun
+                if(percents[index] != -1){
+                    cur.textContent = percents[index] + '%';
+                } else{
+                    cur.textContent = '--%';
+                }
+                });
+        },
+
         getDOM: function(){
             return DOMStrings;
         }
@@ -265,6 +284,7 @@ let controller = (function(budgetCtrl, UICtrl){
         let percentages = budgetCtrl.getPercents();
         console.log(percentages);
         //3. update the UI with new percentages
+        UICtrl.dusplayPercents(percentages);
     }
 
     function ctrlAddItem(){
