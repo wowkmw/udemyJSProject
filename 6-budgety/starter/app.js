@@ -246,6 +246,13 @@ let UIController = (function(){
                 });
         },
 
+        formatNumber: function(num, type){
+            num = Math.abs(num);//return the absolute value of the number
+            num = num.toFixed(2);//The toFixed() method converts a number into a string,
+                                 // rounding to a specified number of decimals.
+            
+        },
+
         getDOM: function(){
             return DOMStrings;
         }
