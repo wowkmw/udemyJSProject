@@ -154,6 +154,24 @@ let UIController = (function(){
         listParent: '.container',//class name is separated by space
         expPercentLabel: '.item__percentage'
     };
+
+    function formatNumber(num, type){
+        num = Math.abs(num);//return the absolute value of the number
+        num = num.toFixed(2);//The toFixed() method converts a number into a string,
+                             // rounding to a specified number of decimals.
+        let numSplit = num.split('.');
+        let int = numSplit[0];
+        let dec = numSplit[1];
+        if(int.length > 3){
+            int = int.slice(0, -3) + ',' + int.slice(-3);
+        }
+        num = int + '.' + dec;
+        let sign;
+        type === 'exp' ? sign = '-' : sign = '+';
+        num = sign + ' ' + num;
+        return num;
+    }
+
     return{
         getInput: function(){
             /*let type = document.querySelector(".add__type").value; //will be either inc or exp
@@ -190,7 +208,7 @@ let UIController = (function(){
             }
             
             //replace placeholder texts with input
-            newHTML = textHTML.replace('%id%', obj.id).replace('%description%', obj.description).replace('%value%', obj.value);
+            newHTML = textHTML.replace('%id%', obj.id).replace('%description%', obj.description).replace('%value%', formatNumber(obj.value, type));
             //insert into DOM
             document.querySelector(containerType).insertAdjacentHTML('beforeend', newHTML);
             
@@ -214,12 +232,12 @@ let UIController = (function(){
         },
 
         showBudget: function(obj){
-            document.querySelector(DOMStrings.incomeLabel).textContent = obj.totalInc;
-            document.querySelector(DOMStrings.expenseLabel).textContent = obj.totalExp;
+            document.querySelector(DOMStrings.incomeLabel).textContent = formatNumber(obj.totalInc, 'inc');
+            document.querySelector(DOMStrings.expenseLabel).textContent = formatNumber(obj.totalExp, 'exp');
             if(obj.budget > 0){
-                document.querySelector(DOMStrings.totalBudgetLabel).textContent = '+' + obj.budget;
+                document.querySelector(DOMStrings.totalBudgetLabel).textContent = formatNumber(obj.budget, 'inc');
             }else{
-                document.querySelector(DOMStrings.totalBudgetLabel).textContent = obj.budget;
+                document.querySelector(DOMStrings.totalBudgetLabel).textContent = formatNumber(obj.budget, 'exp');
             }
             if(obj.percent != -1){
                 document.querySelector(DOMStrings.persentageLabel).textContent = obj.percent + '%';
@@ -246,12 +264,6 @@ let UIController = (function(){
                 });
         },
 
-        formatNumber: function(num, type){
-            num = Math.abs(num);//return the absolute value of the number
-            num = num.toFixed(2);//The toFixed() method converts a number into a string,
-                                 // rounding to a specified number of decimals.
-            
-        },
 
         getDOM: function(){
             return DOMStrings;
