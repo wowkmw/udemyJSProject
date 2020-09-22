@@ -173,6 +173,12 @@ let UIController = (function(){
         return num;
     }
 
+    function nodeListForEach(list, callback){
+        for (let i = 0; i < list.length; i++){
+            callback(list[i], i);
+        }
+    }
+
     return{
         getInput: function(){
             /*let type = document.querySelector(".add__type").value; //will be either inc or exp
@@ -250,12 +256,6 @@ let UIController = (function(){
         dusplayPercents: function(percents){
             let fields = document.querySelectorAll(DOMStrings.expPercentLabel);
 
-            function nodeListForEach(list, callback){
-                for (let i = 0; i < list.length; i++){
-                    callback(list[i], i);
-                }
-            }
-
             nodeListForEach(fields, function(cur, index){//the callback fun
                 if(percents[index] != -1){
                     cur.textContent = percents[index] + '%';
@@ -272,6 +272,20 @@ let UIController = (function(){
             months = ['Jan', 'Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             month = months[now.getMonth() - 1];
             document.querySelector(DOMStrings.dateLabel).textContent = month + ' ' + year;
+        },
+
+        changedType: function(){
+            let fields = document.querySelectorAll(
+                DOMStrings.inputType + ',' +
+                DOMStrings.inputDescription + ',' +
+                DOMStrings.inputValue
+            );
+
+            nodeListForEach(fields, function(cur){
+                cur.classList.toggle('red-focus');
+            });
+
+            document.querySelector(DOMStrings.inputBtn).classList.toggle('red');
         },
 
         getDOM: function(){
@@ -294,6 +308,8 @@ let controller = (function(budgetCtrl, UICtrl){
         });
 
         document.querySelector(DOMStrings.listParent).addEventListener('click', ctrlDeleteItem);
+
+        document.querySelector(DOMStrings.inputType).addEventListener('change', UICtrl.changedType);
     }
 
     function updateBudget(){
