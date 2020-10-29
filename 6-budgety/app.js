@@ -3,7 +3,7 @@
 
 
 //budget controller to do the backend calculation
-let budgetController = (function () {
+let budgetController = (() => {
     function Expense(id, description, value) { //interchangable?
         this.id = id;
         this.description = description;
@@ -87,10 +87,8 @@ let budgetController = (function () {
             }
         },
 
-        calculatePercent: function () {
-            database.allItems.exp.forEach(function (cur) { //loop through all objects in the exp []
-                cur.calcPercent(database.totals.inc);
-            });
+        calculatePercent() {
+            database.allItems.exp.forEach(cur => cur.calcPercent(database.totals.inc));
             /*
             //the following is a primitive version
             let cur = database.allItems.exp;
@@ -100,14 +98,11 @@ let budgetController = (function () {
             */
         },
 
-        getPercents: function () {
-            let allPercents = database.allItems.exp.map(function (cur) {
-                return cur.getPercent();
-            });
-            return allPercents;
+        getPercents() {
+            return database.allItems.exp.map(cur => cur.getPercent());
         },
 
-        getBudget: function () {
+        getBudget() {
             return {
                 totalInc: database.totals.inc,
                 totalExp: database.totals.exp,
@@ -116,12 +111,10 @@ let budgetController = (function () {
             };
         },
 
-        deleteItem: function (type, id) {
+        deleteItem(type, id) {
             let ids, index;
 
-            ids = database.allItems[type].map(function (current) {
-                return current.id; //return an array of id
-            }); //The map() method creates a new array with the results of calling a function for every array element.
+            ids = database.allItems[type].map(cur => cur.id); //The map() method creates a new array with the results of calling a function for every array element.
 
             index = ids.indexOf(id); //indexOf return the index of the id
             if (index !== -1) {
@@ -130,7 +123,7 @@ let budgetController = (function () {
             }
         },
 
-        test: function () {
+        test() {
             console.log("current database:"); //because database was a private variable
             console.log(database); //we need a function exposed to the public like this to view 
         }
